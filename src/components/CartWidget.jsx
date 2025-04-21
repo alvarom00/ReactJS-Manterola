@@ -1,10 +1,16 @@
-import { ShoppingCartOutlined } from '@ant-design/icons';
+import { ShoppingCartOutlined } from '@ant-design/icons'
+import { useContext } from 'react'
+import { CartContext } from '../context/CartContext'
 
 const CartWidget = () => {
+  const { getTotalItems } = useContext(CartContext)
+
+  const totalItems = getTotalItems()
+
   return (
     <div>
-        <ShoppingCartOutlined />
-        <span>0</span>
+      <ShoppingCartOutlined />
+      <span>{totalItems}</span>
     </div>
   )
 }
