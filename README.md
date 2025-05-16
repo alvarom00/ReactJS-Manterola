@@ -16,3 +16,5 @@ If you are developing a production application, we recommend using TypeScript an
 
 ### 'npm run dev'
 Iniciar la app en develop
+
+Los datos de firebaseConfig fueron ignorados en el .env
