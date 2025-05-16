@@ -1,31 +1,25 @@
-const products = [
-    { id: "1", name: "Hell Let Loose", category: "accion", image: "hll.png", description: "Shooter en primera persona." },
-    { id: "2", name: "DayZ", category: "survival", image: "dayz.jpg", description: "Terror y supervivencia." },
-    { id: "3", name: "VEIN", category: "survival", image: "vein.png", description: "Sobrevive al apocalipsis zombie." },
-    { id: "4", name: "SCUM", category: "survival", image: "scum.jpg", description: "Sobreviví en una isla." },
-  ]
-  
-  export const getProducts = () => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(products)
-      }, 500)
-    })
+import { collection, getDocs, getDoc, doc, query, where } from "firebase/firestore"
+import { db } from "../firebase/firebaseConfig"
+
+export const getProducts = async () => {
+  const productsRef = collection(db, "productos")
+  const snapshot = await getDocs(productsRef)
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+}
+
+export const getProductById = async (id) => {
+  const docRef = doc(db, "productos", id)
+  const docSnap = await getDoc(docRef)
+  if (docSnap.exists()) {
+    return { id: docSnap.id, ...docSnap.data() }
+  } else {
+    throw new Error("Producto no encontrado")
   }
-  
-  export const getProductById = (id) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(products.find(p => p.id === id))
-      }, 500)
-    })
-  }
-  
-  export const getProductsByCategory = (category) => {
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(products.filter(p => p.category === category))
-      }, 500)
-    })
-  }
-  
+}
+
+export const getProductsByCategory = async (category) => {
+  const productsRef = collection(db, "productos")
+  const q = query(productsRef, where("category", "==", category))
+  const snapshot = await getDocs(q)
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }))
+}
